@@ -1,0 +1,17 @@
+<ul class="product__description__tabs">
+  <li class="active" data-tab="description">Description</li>
+  {%- if product.metafields.customAttributes.ingredients != blank -%}
+    <li data-tab="ingredients">Ingredients</li>
+  {%- endif -%}
+  <li><a href="/collections/{{ product.vendor | handleize }}">Shop All {{ product.vendor }} <span style="font-size: 2rem; line-height: 2rem; display: inline-block; vertical-align: middle; position: relative; top: -3px;">&rsaquo;</span></a></li>
+</ul>
+
+<div class="product__description__content active" data-tab="description">
+  {{ product.description | split: '<!-- split -->' | first }}
+</div>
+
+{%- if product.metafields.customAttributes.ingredients != blank -%}
+  <div class="product__description__content" data-tab="ingredients">
+    {{ product.metafields.customAttributes.ingredients }}
+  </div>
+{%- endif -%}

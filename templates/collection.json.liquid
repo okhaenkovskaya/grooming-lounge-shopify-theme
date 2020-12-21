@@ -1,0 +1,5 @@
+{% layout none %}{{ collection.products | json }}
+{% comment %}
+  - This layout is used to bring an entire collection as a json array, so it
+  can be consumed by ajax applications. 
+{% endcomment %}

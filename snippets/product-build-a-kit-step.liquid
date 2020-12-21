@@ -1,0 +1,53 @@
+{% assign steps = 'Zero,One,Two,Three,Four,Five,Six,Seven,Eight,Nine,Ten' | split: ',' %}
+{% assign collection_handle = 'collection_' | append: step %}
+{% assign collection = collections[ product.metafields.build_a_kit[ collection_handle ] ] %}
+
+{% assign is_free_step = false %}
+{%- if product.metafields.build_a_kit.free_steps -%}
+  {% assign free_steps = product.metafields.build_a_kit.free_steps | replace: ' ', '' | split: ',' %}
+  {% for free_step in free_steps %}
+    {% assign st = free_step | plus: 0 %}
+    {% if st == step %}{% assign is_free_step = true %}{% endif %}
+  {% endfor %}
+{%- endif -%}
+
+
+<div class="build__step {% if active %}actionable active{% endif %}" data-step="{{ step }}">
+  <div class="build__step__header">
+    <span>Select</span><br>
+    {% assign step_name = 'step_name_' | append: step %}
+    {%- if product.metafields.build_a_kit[ step_name ] != blank -%}
+        {{ product.metafields.build_a_kit[ step_name ] }}
+    {%- else condition -%}
+        Product {{ steps[ step ] }}
+    {%- endif -%}
+  </div>
+  <div class="build__step__body">
+    <div class="build__step__carousel" data-flickity='{"contain": true, "groupCells": true }'>
+      {%- for p in collection.products -%}
+        <input class="build__step__carousel__item--radio" data-step="{{ step }}" type="radio" name="product_{{ step }}" value="{{ p.variants.first.id }}" data-variant-id="{{ p.variants.first.id }}" data-title="{{ p.title }}" data-handle="{{ p.handle }}" data-price="{% if is_free_step %}0{% else %}{{ p.variants.first.price }}{% endif %}" data-free="{% if is_free_step %}true{% else %}false{% endif %}">
+        <div class="build__step__carousel__item {% unless p.available %}build__step__carousel__item--oos{% endunless %}">
+          <div class="build__step__carousel__item--image" style="background-image: url({{ p.featured_image | img_url: 'medium' }})"></div>
+          <p class="build__step__carousel__item--title">{{ p.title }}</p>
+
+          {%- if p.available -%}
+            {%- if is_free_step -%}
+              <p class="build__step__carousel__item--price">FREE</p>
+            {% else %}
+              <p class="build__step__carousel__item--price">{{ p.variants.first.price | money }}</p>
+            {%- endif -%}
+          {%- else condition -%}
+            <p class="build__step__carousel__item--price">Out of Stock</p>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+  <div class="build__step__footer">
+    <button class="build__step__continue btn" disabled>Continue</button>
+    {%- unless product.price > 0 -%}
+      <a href="#" class="build__step__clear">Don't Need</a>
+    {%- endunless -%}
+
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<div class="product-details">
+  <span class="title" itemprop="name">{{ product.title }}</span>
+  {% if settings.display_vendor %}
+    <span class="brand">{{ product.vendor }}</span>
+  {% endif %}
+  {% if settings.enable_shopify_collection_badges %}
+    <div class="shopify-reviews reviewsVisibility--{{settings.enable_shopify_review_comments}}">
+
+      {%- if template contains 'collection' -%}
+        <span class=" stamped-product-reviews-badge" data-product-sku="{{ product.handle }}" data-id="{{ product.id }}" style="display:block;">{{ product.metafields.stamped.badge }}</span>
+      {%- else -%}
+        <span class="stamped-product-reviews-badge stamped-main-badge"
+        data-id="{{ product.id }}" data-product-sku="{{ product.handle }}"
+        style="display: inline-block;">{{ product.metafields.stamped.badge }}</span>
+      {%- endif -%}
+
+      {% comment %}
+      <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+      {% endcomment %}
+    </div>
+  {% endif %}
+  {% if collection_handles contains 'coming-soon' %}
+    <span class="modal_price">{{ 'collections.general.coming_soon' | t }}</span>
+  {% else %}
+    <span class="price {% if product.compare_at_price_max > product.price %}sale{% endif %}">
+      <span class="current_price">
+        {% if product.available %}
+          {% if product.price_varies and product.price_min > 0 %}
+            <small><em>{{ 'products.general.from' | t }}</em></small>
+          {% endif %}
+            {% if product.price_min > 0 %}
+              <span class="money">{{ product.price_min | money }}</span>
+            {% else %}
+              {{ settings.free_price_text }}
+            {% endif %}
+        {% else %}
+          <span class="sold_out">{{ 'products.product.sold_out' | t }}</span>
+        {% endif %}
+      </span>
+        {% assign variant = product.selected_or_first_available_variant %}
+        <span class="was_price">
+          {% if variant.price < variant.compare_at_price and variant.available %}
+            <span class="money">{{ variant.compare_at_price | money }}</span>
+          {% endif %}
+        </span>
+    </span>
+  {% endif %}
+
+  {%- include 'product-promotion-message' -%}
+
+</div>

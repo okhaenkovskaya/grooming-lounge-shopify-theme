@@ -1,0 +1,9 @@
+{% assign products_to_add = product.metafields.build_a_kit.products_to_add %}
+
+<div class="build-a-kit" data-dynamic="{% if product.price > 0 %}false{% else %}true{% endif %}" data-base-price="{{ product.variants.first.price }}">
+  <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+  {%- for i in (1..products_to_add) -%}
+    {%- include 'product-build-a-kit-step' with step: i, active: forloop.first -%}
+  {%- endfor -%}
+  {%- include 'product-build-a-kit-review' -%}
+</div>

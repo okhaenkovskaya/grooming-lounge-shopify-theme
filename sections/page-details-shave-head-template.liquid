@@ -1,0 +1,1081 @@
+{% comment %}
+** Details page - custom view **
+- Page template
+- Uses blocks
+{% endcomment %}
+
+<a name="pagecontent" id="pagecontent"></a>
+
+<div class="detail-sections">
+
+{% if section.blocks.size > 0 %}
+  {% for block in section.blocks %}
+    <div {{ block.shopify_attributes }} class="block__{{ block.type }} block__{{ block.id }}
+    {% if block.type == "image_with_text_overlay" and block.settings.wide_display %}
+      under-menu
+    {% elsif block.type == "featured_video" and block.settings.wide_display %}
+      under-menu
+    {% elsif block.type == "featured_collection" %}
+      featured-collection-section
+    {% endif %}
+    ">
+
+      {% if block.type == "blog_posts" %}
+        <!-- Blog posts -->
+        {% include 'include-featured-blog', type: 'block' %}
+
+      {% elsif block.type == "contact_form" %}
+        <!-- Contact form -->
+        {% include 'include-contact-form', type: 'block' %}
+
+      {% elsif block.type == "featured_video" %}
+        <!-- Featured video -->
+        {% include 'include-video', type: 'block' %}
+
+      {% elsif block.type == 'image_gallery' %}
+        <!-- Image gallery -->
+        {% include 'include-gallery', type: 'block' %}
+
+      {% elsif block.type == "image_with_text" %}
+        <!-- Image with text -->
+        {% if block.settings.layout == false %}
+          <div class="container standard--width">
+        {% endif %}
+        <div class="image-with-text
+          featured_collections
+          clearfix across-1 image-align--{{ block.settings.frontpage_image_position }}">
+          <section class="featured-link--section featured-link--image section-{{ forloop.index }}">
+            <div class="featured-link--half featured-link--image {% if block.settings.layout == false %}featured-link--margin{% endif %} image-crop--{{ block.settings.image_crop }}">
+              <div class="featured-link--wrap">
+                <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %} title="{{ block.settings.title }}">
+                  {% if block.settings.image %}
+                    {% include 'image-element', image: block.settings.image, alt: block.settings.image.alt %}
+                  {% else %}
+                    {% capture i %}{% cycle "1", "2", "3", "4", "5", "6" %}{% endcapture %}
+                    {{ 'collection-' | append: i | placeholder_svg_tag: 'placeholder-svg placeholder-svg--promotions' }}
+                  {% endif %}
+                </a>
+              </div>
+            </div>
+            <div class="featured-link--half">
+              <div class="info text-align--{{block.settings.frontpage_text_align}}">
+                <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %} class="collection_title">
+                  {{ block.settings.title }}
+                </a>
+                {% if block.settings.text != blank %}
+                  <div class="description">{{ block.settings.text }}</div>
+                {% endif %}
+                {% if block.settings.button_label != blank %}
+                  <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %} class="button">
+                    {{ block.settings.button_label }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </section>
+        </div>
+        {% if block.settings.layout == false %}
+          </div>
+        {% endif %}
+
+        {% if block.settings.layout == false %}
+          <style>
+            #shopify-section-{{ section.id }} .featured-link--section {
+              margin-bottom: 3%;
+            }
+            @media only screen and (max-width: 480px) {
+              #shopify-section-{{ section.id }} .featured-link--section {
+                margin-bottom: 10%;
+              }
+            }
+
+            .standard--width .featured-link--margin {
+              margin-left: 0%;
+              margin-right: 3%;
+            }
+
+            .standard--width .image-align--right .featured-link--margin {
+              margin-left: 3%;
+              margin-right: 0%;
+            }
+
+            .standard--width .featured-link--half {
+              width: 45%;
+            }
+          </style>
+        {% endif %}
+
+      {% elsif block.type == 'map' %}
+        <!-- Map -->
+        {% include 'include-map', type: 'block' %}
+
+      {% elsif block.type == "page" %}
+        <!-- Page -->
+        {% include 'include-content-page', type: 'block' %}
+
+      {% elsif block.type == 'quote' %}
+        <!-- Quote -->
+        {% include 'include-quote', type: 'block' %}
+
+      {% elsif block.type == "rich_text_and_image" %}
+        <!-- Rich text and image -->
+        {% include 'include-featured-text', type: 'block' %}
+
+      {% elsif block.type == 'divider' %}
+        <!-- Divider -->
+        {% include 'include-divider', type: 'block' %}
+
+      {% elsif block.type == "featured_collection" %}
+        <!-- Featured collection -->
+        {% include 'include-featured-collection', type: 'block' %}
+
+      {% elsif block.type == "image_with_text_overlay" %}
+        <!-- Image with text overlay -->
+        {% include 'include-image-with-text-overlay', type: 'block' %}
+
+      {% elsif block.type == "recently_viewed_products" %}
+        <!-- Related Products -->
+        {% include 'include-recently-viewed', type: 'block' %}
+
+      {% elsif block.type == "custom_html" %}
+        <!-- Custom HTML -->
+        {% include 'include-custom-html', type: 'block' %}
+
+      {% endif %}
+    </div>
+  {% endfor %}
+{% endif %}
+</div>
+
+{% schema %}
+
+{
+  "name": "Page | details",
+  "class": "page-details-section",
+  "max_blocks": 100,
+  "blocks": [
+    {
+      "type": "blog_posts",
+      "name": "Blog posts",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Blog posts"
+        },
+        {
+          "type": "blog",
+          "id": "blog_widget_select",
+          "label": "Blog"
+        },
+        {
+          "type": "range",
+          "id": "home_page_articles",
+          "label": "Posts",
+          "min": 2,
+          "max": 4,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_tags",
+          "label": "Show blog post tags"
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_author",
+          "label": "Show author"
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_date",
+          "label": "Show date",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_comment_count",
+          "label": "Show comment count",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "read_more_link",
+          "label": "Show continue reading link for blog post excerpts",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "contact_form",
+      "name": "Contact form",
+      "settings": [
+        {
+          "type": "text",
+          "id": "contact_heading",
+          "label": "Heading",
+          "default": "Get in touch"
+        },
+        {
+          "type": "text",
+          "id": "contact_subheading",
+          "label": "Subheading",
+          "default": "Leave a message"
+        },
+        {
+          "type": "richtext",
+          "id": "contact_content",
+          "label": "Text",
+          "default": "<p>Use this text to include important information that you'd like your customers to be aware of when contacting you. You could include shop hours, email response times, other ways to contact you, or just some friendly text to encourage your customers to reach out.</p>"
+        },
+        {
+          "type": "select",
+          "id": "contact_text_position",
+          "label": "Text position",
+          "default": "left",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "contact_text_alignment",
+          "label": "Text alignment",
+          "default": "left",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "custom_html",
+      "name": "Custom HTML",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "custom_html",
+          "label": "Custom HTML"
+        }
+      ]
+    },
+    {
+      "type": "divider",
+      "name": "Divider",
+      "settings": [
+        {
+          "type": "range",
+          "id": "divider_spacing",
+          "min": 0,
+          "max": 30,
+          "step": 5,
+          "unit": "px",
+          "label": "Space",
+          "default": 15
+        },
+        {
+          "type": "checkbox",
+          "id": "divider_border",
+          "label": "Show border",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "featured_collection",
+      "name": "Featured collection",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "POPULAR PICKS"
+        },
+        {
+          "type": "checkbox",
+          "id": "collection_description",
+          "label": "Show collection description",
+          "default": false
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "radio",
+          "id": "collection_style",
+          "label": "Collection layout",
+          "default": "slider",
+          "options": [
+            {
+              "value": "slider",
+              "label": "Slider"
+            },
+            {
+              "value": "grid",
+              "label": "Grid"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "products_per",
+          "label": "Products per row",
+          "min": 2,
+          "max": 7,
+          "step": 1,
+          "default": 3
+        },
+        {
+          "type": "range",
+          "id": "products_limit",
+          "label": "Limit products",
+          "min": 2,
+          "max": 50,
+          "step": 1,
+          "default": 20
+        }
+      ]
+    },
+    {
+      "type": "image_gallery",
+      "name": "Image gallery",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "detail_image_1",
+          "label": "Image 1",
+          "info": "760 x 500px recommended"
+        },
+        {
+          "type": "image_picker",
+          "id": "detail_image_2",
+          "label": "Image 2",
+          "info": "760 x 500px recommended"
+        },
+        {
+          "type": "image_picker",
+          "id": "detail_image_3",
+          "label": "Image 3",
+          "info": "760 x 500px recommended"
+        }
+      ]
+    },
+    {
+      "type": "image_with_text",
+      "name": "Image with text",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "layout",
+          "label": "Wide display",
+		  "default": true
+        },
+        {
+          "type": "select",
+          "id": "frontpage_text_align",
+          "label": "Text alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "frontpage_image_position",
+          "label": "Image position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1024 x 1024px recommended"
+        },
+        {
+          "type": "select",
+          "id": "image_crop",
+          "label": "Image cropping",
+          "default": "none",
+          "info": "Only applied when text area is taller than image.",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "none",
+              "label": "None"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "The Best"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Paste here.</p>"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "SHOP NOW"
+        }
+      ]
+    },
+    {
+      "type": "image_with_text_overlay",
+      "name": "Image with text overlay",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "wide_display",
+          "label": "Wide display",
+          "default": true
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1800 x 1000px recommended"
+        },
+        {
+          "type": "richtext",
+          "id": "pretext",
+          "label": "Preheading",
+          "default": "<p></p>"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "subtitle",
+          "label": "Text",
+          "default": "<p></p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "caption_background",
+          "label": "Display solid text background",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "caption_background_transparency",
+          "label": "Enable background transparency"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Text position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Text alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "button1",
+          "label": "First button label"
+        },
+        {
+          "type": "url",
+          "id": "button1_link",
+          "label": "First link"
+        },
+        {
+          "type": "checkbox",
+          "id": "button1_highlight",
+          "label": "Highlight first button"
+        },
+        {
+          "type": "text",
+          "id": "button2",
+          "label": "Second button label"
+        },
+        {
+          "type": "url",
+          "id": "button2_link",
+          "label": "Second link"
+        },
+        {
+          "type": "checkbox",
+          "id": "button2_highlight",
+          "label": "Highlight second button"
+        }
+      ]
+    },
+    {
+      "type": "map",
+      "name": "Map",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "wide_display",
+          "label": "Wide display",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "map_address",
+          "label": "Address",
+          "info": "Google Maps will find the exact location"
+        },
+        {
+          "type": "range",
+          "id": "map_height",
+          "min": 300,
+          "max": 600,
+          "step": 10,
+          "unit": "px",
+          "label": "Map height",
+          "default": 400
+        },
+        {
+          "type": "range",
+          "id": "zoom_level",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "unit": "x",
+          "label": "Map zoom level",
+          "default": 16
+        },
+        {
+          "type": "image_picker",
+          "id": "map_image",
+          "label": "Image",
+          "info": "Displayed when map isn't loaded"
+        },
+        {
+          "type": "header",
+          "content": "API key"
+        },
+        {
+          "type": "text",
+          "id": "api_key",
+          "label": "Google Maps API key",
+          "info": "You’ll need to [register a Google Maps API Key](https://help.shopify.com/manual/using-themes/troubleshooting/map-section-api-key) to display the map"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_pin",
+          "label": "Show pin",
+          "info": "Requires use of API key",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "map_style",
+          "label": "Map color scheme",
+          "options": [
+            {
+              "value": "default",
+              "label": "Default"
+            },
+            {
+              "value": "aubergine",
+              "label": "Aubergine"
+            },
+            {
+              "value": "night",
+              "label": "Night"
+            },
+            {
+              "value": "retro",
+              "label": "Retro"
+            },
+            {
+              "value": "silver",
+              "label": "Silver"
+            }
+          ],
+          "default": "default",
+          "info": "Requires use of API key"
+        }
+      ]
+    },
+    {
+      "type": "page",
+      "name": "Page",
+      "settings": [
+        {
+          "type": "page",
+          "id": "content_page",
+          "label": "Content page"
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "name": "Quote",
+      "settings": [
+        {
+          "type": "text",
+          "id": "quote_text",
+          "label": "Text",
+          "default": "40% of online shoppers abandon a site that takes more than 3 seconds to load"
+        },
+        {
+          "type": "url",
+          "id": "quote_link",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "recently_viewed_products",
+      "name": "Recently viewed products",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "To test the recently viewed products, view your online store outside of the Editor and visit multiple product pages. [Learn more](https:\/\/help.outofthesandbox.com\/hc\/en-us\/articles\/115008765228)"
+        },
+        {
+          "type": "text",
+          "id": "rv_title",
+          "label": "Heading",
+          "default": "Recently viewed products"
+        },
+        {
+          "type": "radio",
+          "id": "rv_products_style",
+          "label": "Layout",
+          "default": "grid",
+          "options": [
+            {
+              "value": "slider",
+              "label": "Slider"
+            },
+            {
+              "value": "grid",
+              "label": "Grid"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "rv_max_display",
+          "label": "Products limit",
+          "min": 3,
+          "max": 12,
+          "step": 1,
+          "default": 6
+        },
+        {
+          "type": "range",
+          "id": "rv_per",
+          "label": "Products per row",
+          "min": 3,
+          "max": 5,
+          "step": 1,
+          "default": 4
+        }
+      ]
+    },
+    {
+      "type": "rich_text_and_image",
+      "name": "Rich text and image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "YOU MIGHT ALSO ENJOY"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Text",
+          "default": "<p></p>"
+        },
+        {
+          "type": "select",
+          "id": "text_size",
+          "label": "Text size",
+          "options": [
+            {
+              "value": "regular_text",
+              "label": "Regular"
+            },
+            {
+              "value": "featured_text",
+              "label": "Large"
+            }
+          ],
+          "default": "regular_text"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "label": "Text alignment",
+          "options": [
+            {
+              "value": "align_left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "featured_video",
+      "name": "Video",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "wide_display",
+          "label": "Wide display",
+          "default": true
+        },
+        {
+          "type": "select",
+          "id": "aspect_ratio",
+          "label": "Aspect ratio",
+          "options": [
+            {
+              "value": "16:9",
+              "label": "16:9"
+            },
+            {
+              "value": "4:3",
+              "label": "4:3"
+            }
+          ],
+          "default": "16:9"
+        },
+        {
+          "type": "checkbox",
+          "id": "autoplay",
+          "label": "Autoplay video",
+          "default": false,
+          "info": "Limited browser support for autoplaying video. [Learn more](https:\/\/help.outofthesandbox.com\/hc\/en-us\/articles\/360000661568-Why-won-t-my-video-autoplay-)"
+        },
+        {
+          "type": "checkbox",
+          "id": "autoloop",
+          "label": "Autoloop video",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "video_dark_overlay",
+          "label": "Darken video"
+        },
+        {
+          "type": "video_url",
+          "id": "video",
+          "label": "Video link",
+          "accept": ["youtube", "vimeo"],
+          "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+        },
+        {
+          "type": "text",
+          "id": "mp4",
+          "label": "HTML5 MP4 File URL"
+        },
+        {
+          "type": "text",
+          "id": "ogv",
+          "label": "HTML5 OGV File URL (optional)"
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+       {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "1600 x 900px recommended"
+        },
+        {
+          "type": "checkbox",
+          "id": "display_text_over_video",
+          "label": "Show text on video",
+          "default": false
+        },
+        {
+          "type": "richtext",
+          "id": "pretext",
+          "label": "Preheading"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "subtitle",
+          "label": "Subheading"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Text position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Text alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "checkbox",
+          "id": "caption_background",
+          "label": "Display solid text background"
+        },
+        {
+          "type": "checkbox",
+          "id": "caption_background_transparency",
+          "label": "Enable background transparency"
+        },
+        {
+          "type": "text",
+          "id": "button1_label",
+          "label": "First button label"
+        },
+        {
+          "type": "url",
+          "id": "button1_link",
+          "label": "First link"
+        },
+        {
+          "type": "checkbox",
+          "id": "button1_highlight",
+          "label": "Highlight first button"
+        },
+        {
+          "type": "text",
+          "id": "button2_label",
+          "label": "Second button label"
+        },
+        {
+          "type": "url",
+          "id": "button2_link",
+          "label": "Second link"
+        },
+        {
+          "type": "checkbox",
+          "id": "button2_highlight",
+          "label": "Highlight second button"
+        }
+      ]
+    }
+  ],
+  "default": {
+  }
+}
+
+{% endschema %}
+
+<script type="application/ld+json">
+{
+"@context": "http://schema.org",
+"@type": "HowTo",
+"image": {
+"@type": "ImageObject",
+"url": "https://cdn.shopify.com/s/files/1/0176/8397/2150/files/how-to-shave-your-head_800x.jpg"
+},
+"name": "How To Shave Your Head the Right Way",
+"description": "A quick and painless guide that teaches how to shave your head smoothly. If you are looking for an easy to follow head shaving tutorial, you should read this guide.",
+"totalTime": "P0Y7M",
+  "supply": [
+    {
+      "@type": "HowToSupply",
+      "name": "None Required"
+    }
+  ],
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "Electric Hair Trimmer"
+    }
+  ],
+"step":[
+{
+"@type": "HowToStep",
+"name": "Trim Your Hair Down to Stubble with an Electric Trimmer",
+"text": "You wouldn’t play croquet on an overgrown lawn. The same goes for head-shaving. Prepare the groundwork by starting with a dry shave: using an electric razor to trim hair down to stubble length. One electric razor we’re always obsessed with is the Philips Norelco Beard & Stubble Trimmer Series 3000. Whether you're looking to maintain a 5 o'clock shadow, keep a bushy beard in check, or trim your shrubs, the 3000 Series Trimmer is equipped for any and all grooming needs. This bad boy features a sleek, matte black finish and can fully charge in just a few hours thanks to a cordless Lithium-Ion battery. An ergonomic design makes maneuvering around tricky (or sensitive) areas a total breeze.Always make sure hair on top is stubble at most, as any longer amounts could cause razor-clogging and pain.",
+"image": "https://cdn.shopify.com/s/files/1/0176/8397/2150/files/step-one_1200x.jpg?v=1592236844",
+"url": "https://www.groominglounge.com/pages/how-to-shave-your-head#step_one"
+}, {
+"@type": "HowToStep",
+"name": "Prep Scalp by Washing with Warm Water and an Exfoliating Scrub.",
+"text": "Once you’ve mowed your hair down to stubble, it’ll be time to prep your scale by washing with warm water and applying an exfoliating scrub. The shower is the best place to start, but if you can’t get to one, simply soak a small towel in hot water and apply to your head. The softer the hair, the less pressure need be applied and the less chance of nasty, noticeable cuts. Try using an exfoliating cleanser that’ll open the pores and “buff down” the skin that causes the ingrown hairs — frequently found close to the neck. A great go-to is Billy Jealousy Assassin Deep Exfoliating Scrub. This intensive exfoliator’s super-gritty consistency buffs away skin imperfections with ease total ease. It looks like a rich mud but actually makes the skin clean and smooth. Walnut shells and almond meal removes dead cells, while sugarcane and lemon extract smooths and firm your dome. Then the skin on your head is left toned, renewed, and actually better able to absorb other treatments. If a milder scrub is needed, we suggest Billy Jealousy Liquid Sand or Sucker Punch.",
+"image": "https://cdn.shopify.com/s/files/1/0176/8397/2150/files/step-two_1200x.jpg?v=1592237062",
+"url": "https://www.groominglounge.com/pages/how-to-shave-your-head#step_two"
+}, {
+"@type": "HowToStep",
+"name": "Lubricate Head with Shave Oil, Then Add High-Quality Shaving Cream",
+"text": "Just like when shaving a beard, adding generous amounts of shave oil and shave cream are essential. Use lightweight and fragrance-free products, as something with heavier filler can stick around and cause oiliness. Truefitt and Hill Ultimate Comfort Pre-Shave Oil is an amazing shaving oil from the oldest shaving company on the planet. Sunflower oil, avocado oil, cucumber, and tangerines keep your follicles super-slick and moisturized, prepping you for a pain-free shave. Before applying shave cream, rub a small amount (three drops should do it) onto your head. Then it’s time to apply shave cream. Obviously, you can’t go wrong with HeadBlade HeadSlick Shave Cream; the absolute best shaving cream for head shavers... bar none. HeadBlade’s slick shaving formula is loaded with special lubricants to give the smoothest head shave possible. The mentholated water-soluble formula keeps your dome cool and refreshed and makes blades easy to rinse.",
+"image": "https://cdn.shopify.com/s/files/1/0176/8397/2150/files/step-three_1200x.jpg?v=1592237342",
+"url": "https://www.groominglounge.com/pages/how-to-shave-your-head#step_three"
+}, {
+"@type": "HowToStep",
+"name": "Shave Head with HeadBlade Brand Razor and Blades",
+"text": "While some are partial to a Mach3 blade, there are newer and sleeker tools specifically designed for head shaving. From ergonomic handles to easier grips, these products allow deft maneuvering around all kinds of domes. A targeted tool is worth the investment if head shaving is going to be a daily task. Sophia suggests a razor from HeadBlade, which utilizes a wheel in the back and flex-head to maintain contact with the scalp as it rolls over the tough contours of your dome. HeadBlade exploded onto the scene at the turn of the century when their award-winning head razor was named a Top-10 design by TIME Magazine. Started by a gent who himself lacks a few follicles, HeadBlade has gone on to develop a superior line of products to help men maintain their domes. Now you can begin. Start on the side of the head and make short, slow strokes downward in the direction of hair growth. Once you’ve dealt with the sides and back, move on to the top. To deal with the top, start at the whorl (the cowlick spot on the back of the head) and shave toward the forehead. After one pass, re-prep your head and do a second pass, this time going against the grain to ensure a close shave. Try and save the thicker patches (such as the coarse hair on the back of the head) for later as this will provide more time for the skin and hair to soften up. End it all with a soothing balm to prevent breakouts or noticeable redness. This should go without saying, especially if this is your first foray into head-shaving, but use a mirror so you can see what you’re doing.",
+"image": "https://cdn.shopify.com/s/files/1/0176/8397/2150/files/step-four_1200x.jpg?v=1592237628",
+"url": "https://www.groominglounge.com/pages/how-to-shave-your-head#step_four"
+}, {
+"@type": "HowToStep",
+"name": "Apply Post-Shave to Prevent Irritation And Ingrown Hairs",
+"text": "Now you’ll want to make sure your freshly shaven head is primed for the spotlight. If you experience nicks and cuts, in addition to moisturizing aftershave you can also apply an ice-cold towel, which closes pores and prevents razor burn. Like any shaving sessions, a moisturizing aftershave will reduce irritation and razor burn. Sophia recommends Grooming Lounge's Best For Last Aftershave, an award-winning, calming post-shave product to soothe the scalp. If nicks don’t respond to aftershave, incorporate our spot treatment, The Shavior, by dabbing it onto areas of irritation for quick relief and healing. The Shavior’s barber-approved treatment provides noticeable and quick relief from razor irritation, razor bumps, and ingrown hairs. Effective as a spot treatment, or aftershave supplement, this botanical-loaded lotion soothes and moisturizes; not to brag, but it’s no surprise the Shavior won the esteemed Men’s Health Men’s Grooming Award.",
+"image": "https://cdn.shopify.com/s/files/1/0176/8397/2150/files/step-five_1200x.jpg?v=1592238386",
+"url": "https://www.groominglounge.com/pages/how-to-shave-your-head#step_five"
+},{
+"@type": "HowToStep",
+"name": "Protect Your scalp with High-SPF Sunscreen or Moisturizer",
+"text": "Now that your bare head is a target for the sun’s rays, remember to protect it with hats or sunscreen. Lab Series Day Rescue Defense Lotion SPF 35 is a lightweight, invisible, and fast-absorbing daily moisturizer with SPF 35 protection. This non-greasy formula utilizes hydra-endure technology, with a blend of plant extracts, to absorb and retain vital hydration and defend against the sun's dangerous rays. This one is ideal for the freshly-shaved domes because of how much this invisible, paraben-free, non-acnegenic cream protects. Maintaining a neat and clean-shaven head isn’t hard — it just requires time and balance. Remember that shaving this area means intense exfoliation for skin that normally doesn't get much, so take your time and use the right treatments afterward. Follow these tips to show off that neat noggin: 1. Moisturize immediately after shaving with something oil-free and lightweight. We said this above, but want to make sure all are listening. 2. Wipe away excessive oil later on, preferably with something that is not your shirt sleeve. 3. Protect that head from direct sun by applying a high-quality sunblock if outside for more than a few minutes ",
+"image": "https://cdn.shopify.com/s/files/1/0176/8397/2150/files/step-six_1200x.jpg?v=1592239124",
+"url": "https://www.groominglounge.com/pages/how-to-shave-your-head#step_six"
+}
+]
+}
+</script>

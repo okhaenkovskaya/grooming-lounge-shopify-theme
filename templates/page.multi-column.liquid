@@ -1,0 +1,14 @@
+<a name="pagecontent" id="pagecontent"></a>
+
+<div class="sixteen columns page clearfix">
+  <h1>
+    {{ page.title }}
+  </h1>
+  <div class="feature_divider"></div>
+  {% assign filtered_content = page.content | replace: '<img src=', '<img class="lazyload" data-src=' %}
+  {% assign filtered_content = filtered_content | replace: '<img alt="" src=', '<img alt="" class="lazyload" data-src=' %}
+  {% include 'page-multi-column', content: filtered_content %}
+
+  {% section 'page-recommended-products' %}
+
+</div>

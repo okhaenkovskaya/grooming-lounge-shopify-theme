@@ -1,0 +1,20 @@
+{% assign collection_handles = product.collections | map: 'handle' %}
+{% if settings.thumbnail_hover_enabled or settings.quick_shop_enabled and settings.quick_shop_style == 'popup' %}
+  <div class="thumbnail-overlay">
+    <a href="{{ product.url | within: collection }}" itemprop="url" class="hidden-product-link">{{ product.title }}</a>
+    <div class="info">
+      {% if settings.thumbnail_hover_enabled %}
+        {% include "product-info" %}
+      {% endif %}
+
+      {% comment %}
+      {% if settings.quick_shop_enabled and settings.quick_shop_style == 'popup' %}
+        {% include 'quick-shop-button' %}
+      {% endif %}
+      {% endcomment %}
+    </div>
+  </div>
+{% endif %}
+<div class="banner_holder">
+    {% include 'product-badges' %}
+</div>

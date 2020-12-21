@@ -1,0 +1,11 @@
+{% if product.metafields.promotion.message != blank %}
+  <p class="promo__message">{{ product.metafields.promotion.message }}</p>
+{% endif %}
+
+{%- for i in (1..5) -%}
+  {% assign setting_tag_name = 'promotion_messages_tag_' | append: i %}
+  {%- if settings[ setting_tag_name ] != blank and product.tags contains settings[ setting_tag_name ] -%}
+    {% assign setting_promo_name = 'promotion_messages_msg_' | append: i %}
+    <p class="promo__message">{{ settings[setting_promo_name] }}</p>
+  {%- endif -%}
+{%- endfor -%}

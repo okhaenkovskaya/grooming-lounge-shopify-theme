@@ -1,0 +1,39 @@
+{% assign rp_col_handle =  'rp-' | append: page.handle %}
+{%- if collections[rp_col_handle] != blank and section.settings.enable -%}
+<div class="recommended__products">
+    <h2>{{ section.settings.section_title }}</h2>
+    <div class="feature_divider"></div>
+
+    {% assign collection = collections[ rp_col_handle ] %}
+    {% assign products_per_row = section.settings.products_per_row %}
+    {% include 'product-loop' with products: collection.products %}
+</div>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Recommended Products",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Enable Product Recommendations",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "Recommended Products"
+    },
+    {
+      "type": "range",
+      "id": "products_per_row",
+      "label": "Products per row",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 3
+    }
+  ]
+}
+{% endschema %}

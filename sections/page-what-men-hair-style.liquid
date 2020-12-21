@@ -1,0 +1,138 @@
+<div class="hairstyle__filter" data-collection-handle="{% if section.settings.collection_handle %}{{ section.settings.collection_handle }}{% else %}all{% endif %}">
+  <h3 class="hairstyle__filter__title">
+    What style best matches the look you're trying to achieve?
+  </h3>
+  <div class="hairstyle__filter__content">
+
+      <div class="hairstyle__filter__item">
+        <input type="radio" name="filter-style" value="style-defined-part" class="hairstyle__filter__radio--invisible">
+        <div>
+          <img src="{{ 'hairstyles_v1-01.png' | asset_url }}" alt="Defined Part">
+          <p>Defined Part</p>
+        </div>
+      </div>
+
+      <div class="hairstyle__filter__item">
+        <input type="radio" name="filter-style" value="style-relaxed" class="hairstyle__filter__radio--invisible">
+        <div>
+          <img src="{{ 'hairstyles_v1-02.png' | asset_url }}" alt="Relaxed">
+          <p>Relaxed</p>
+        </div>
+      </div>
+
+      <div class="hairstyle__filter__item">
+        <input type="radio" name="filter-style" value="style-messy" class="hairstyle__filter__radio--invisible">
+        <div>
+          <img src="{{ 'hairstyles_v1-03.png' | asset_url }}" alt="Messy">
+          <p>Messy</p>
+        </div>
+      </div>
+
+      <div class="hairstyle__filter__item">
+        <input type="radio" name="filter-style" value="style-slick" class="hairstyle__filter__radio--invisible">
+        <div>
+          <img src="{{ 'hairstyles_v1-04.png' | asset_url }}" alt="Slick">
+          <p>Slick</p>
+        </div>
+      </div>
+
+      <div class="hairstyle__filter__item">
+        <input type="radio" name="filter-style" value="style-spiky" class="hairstyle__filter__radio--invisible">
+        <div>
+          <img src="{{ 'hairstyles_v1-05.png' | asset_url }}" alt="Spiky">
+          <p>Spiky</p>
+        </div>
+      </div>
+
+  </div>
+</div>
+
+<div class="hairstyle__filter">
+  <h3 class="hairstyle__filter__title">
+    How much shine do you want your hair to have?
+  </h3>
+  <div class="hairstyle__filter__content">
+
+    <div class="hairstyle__filter__item hairstyle__filter__image">
+      <img src="{{ 'sun-shine.png' | asset_url }}" alt="Hair Shine">
+    </div>
+
+    <div class="hairstyle__filter__item">
+      <label class="hairstyle__filter__label">
+        <input type="radio" name="filter-shine" value="shine-matte" class="hairstyle__filter__radio">
+        <span>No shine (matte finish)</span>
+      </label>
+    </div>
+
+    <div class="hairstyle__filter__item">
+      <label class="hairstyle__filter__label">
+        <input type="radio" name="filter-shine" value="shine-medium" class="hairstyle__filter__radio">
+        <span>Medium Shine</span>
+      </label>
+    </div>
+
+    <div class="hairstyle__filter__item">
+      <label class="hairstyle__filter__label">
+        <input type="radio" name="filter-shine" value="shine-high" class="hairstyle__filter__radio">
+        <span>High Shine</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="hairstyle__filter">
+  <h3 class="hairstyle__filter__title">
+    How much hold do you want from your styling aid?
+  </h3>
+  <div class="hairstyle__filter__content">
+
+    <div class="hairstyle__filter__item hairstyle__filter__image">
+      <img src="{{ 'fan-hold.png' | asset_url }}" alt="Fan Hold">
+    </div>
+
+    <div class="hairstyle__filter__item">
+      <label class="hairstyle__filter__label">
+        <input type="radio" name="filter-hold" value="hold-low" class="hairstyle__filter__radio">
+        <span>Low Hold</span>
+      </label>
+    </div>
+
+    <div class="hairstyle__filter__item">
+      <label class="hairstyle__filter__label">
+        <input type="radio" name="filter-hold" value="hold-medium" class="hairstyle__filter__radio">
+        <span>Medium Hold</span>
+      </label>
+    </div>
+
+    <div class="hairstyle__filter__item">
+      <label class="hairstyle__filter__label">
+        <input type="radio" name="filter-hold" value="hold-high" class="hairstyle__filter__radio">
+        <span>High Hold</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+
+<div class="hairstyle__filter hairstyle__results">
+  <h3 class="hairstyle__filter__title">
+    Here's our Recommendations:
+  </h3>
+  <div class="hairstyle__filter__content">
+
+  </div>
+</div>
+
+{% schema %}
+{
+    "name": "Hair Styles Tool",
+    "settings": [
+      {
+        "type": "collection",
+        "id": "collection_handle",
+        "label": "Collection",
+        "info": "Select a collection to return products only for this collection. If no collection is selected will filter among all products"
+      }
+    ]
+}
+{% endschema %}

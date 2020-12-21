@@ -1,0 +1,9 @@
+{%- if product.tags contains 'new' -%}
+  <div class="new_banner thumbnail_banner">{{ 'collections.general.new' | t }}</div>
+{%- endif -%}
+{%- if product.tags contains 'sale' -%}
+  <div class="sale_banner thumbnail_banner">{{ 'collections.general.sale' | t }}</div>
+{%- endif -%}
+{%- if product.tags contains 'favorite' -%}
+  <div class="favorite_banner thumbnail_banner">{{ 'collections.general.customer_favorite' | t }}</div>
+{%- endif -%}

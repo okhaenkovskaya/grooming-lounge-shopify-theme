@@ -1,0 +1,237 @@
+{% comment %}
+** Main blog page - default view **
+- Template section
+- Uses blocks
+{% endcomment %}
+
+{% if section.settings.image != nil %}
+  <header class="banner center page_banner dark-overlay-{{ section.settings.image_darken }}">
+    {% include 'image-element', image: section.settings.image, alt: section.settings.image.alt, stretch_width: true %}
+    {% if current_tags %}
+      <div class="caption captionOverlay--true">
+        <h1 class="headline">{{ current_tags }}</h1>
+      </div>
+    {% else %}
+      <div class="caption captionOverlay--true">
+        <h1 class="headline">{{ page.title }}</h1>
+        <p class="subtitle">{{ page.description }}</p>
+      </div>
+    {% endif %}
+  </header>
+{% endif %}
+<a name="pagecontent" id="pagecontent"></a>
+
+<div class="container main content">
+
+  <div class="blog-header clearfix">
+    {% unless section.settings.image %}
+      <div class="columns">
+        <h1 class="blog-title">
+          {{ page.title }}
+        </h1>
+        {% if page.content != nil %}
+          <p class="subtitle">{{ page.content }}</p>
+        {% endif %}
+      </div>
+      <div class="sixteen columns">
+        <div class="feature_divider"></div>
+      </div>
+    {% endunless %}
+  </div>
+
+  {% for block in section.blocks %}
+    <div class="banner center page_banner advice-section-header dark-overlay-{{ block.settings.image_darken }}">
+      {% if block.settings.image != nil %}
+        {% if block.settings.image_link %}
+          	<a href="{{ block.settings.image_link }}">
+        {% endif %}
+      	{% include 'image-element', image: block.settings.image, alt: block.settings.image.alt, stretch_width: true %}
+          
+        {% if block.settings.image_link %}
+      		</a>
+        {% endif %}
+      {%endif%}
+      <div class="caption captionOverlay--true">
+        <h2 class="headline">{{ block.settings.title }}</h2>
+        <p class="subtitle">{{ block.settings.subtitle }}</p>
+      </div>
+    </div>
+
+    {% assign handles = block.settings.handles | strip | newline_to_br | split: '<br />' %}
+    <div class="sixteen columns equal-columns--outside-trim equal-columns--clear">
+      {% for handle in handles %}
+        {% if handle != "" %}
+          {%- assign stripped_handle = handle | strip_newlines -%}
+          {% assign current_page = pages[stripped_handle] %}
+        {% endif %}
+        {% if section.settings.blog_posts_per_row == 1 %}
+          {% if current_page.metafields.assets.image != blank %}
+            <div class="nine columns alpha article_image large-down--one-half">
+              <a href="{{ current_page.url }}" title="{{ current_page.title | escape }}">
+                <div class="image-element__wrap">
+                <img data-src="{{current_page.metafields.assets.image}}" alt="{{ current_page.title | escape }}" class="lazyload">
+                </div>
+              </a>
+            </div>
+            <div class="seven columns omega article medium-down--one-half">
+          {% else %}
+            <div class="sixteen columns alpha omega article">
+          {% endif %}
+        {% else %}
+        <div class="{% if section.settings.blog_posts_per_row == 2 %}eight columns {% elsif section.settings.blog_posts_per_row == 3 %}one-third column {% else %}four columns{% endif %} article medium-down--one-half small-down--one-whole">
+          {% if current_page.metafields.assets.image != blank %}
+            <a href="{{ current_page.url }}" title="{{ current_page.title | escape }}">
+              <div class="image-element__wrap">
+              <img data-src="{{current_page.metafields.assets.image}}" alt="{{ current_page.title | escape }}" class="lazyload">
+              </div>
+            </a>
+          {% endif %}
+        {% endif %}
+
+
+          <h2><a href="{{ current_page.url }}">{{ current_page.title }}</a></h2>
+
+          <p class="blog_meta">
+            {% if section.settings.blog_author %}
+              <span>{{ 'blogs.article.by_author' | t: author: article.author }}</span>
+            {% endif %}
+
+            {% if section.settings.blog_date %}
+              <span>{{ current_page.published_at | date: format: "month_day_year" }}</span>
+            {% endif %}
+
+            {% if section.settings.read_time %}
+              {% include 'include-read-time-page' %}
+            {% endif %}
+          </p>
+          {% if current_page.metafields.content.excerpt != blank %}
+            <div class="excerpt"> {{ current_page.metafields.content.excerpt }}</div>
+          {% else %}
+            <div class="excerpt"> {{ current_page.content | strip_html | truncatewords: 30 }}</div>
+          {% endif %}
+          {% if section.settings.read_more_link %}
+            <a href="{{ current_page.url }}" title="{{ current_page.title | escape }}" {% if settings.read_more_style == 'button' %}class="action_button continue-button"{% endif %}>{{ 'blogs.general.continue_reading_html' | t }}</a>
+          {% endif %}
+        </div>
+        {% comment %}
+        {% assign forloop_remaining = forloop.index | modulo: 4 %}
+        {% if section.settings.blog_posts_per_row == 2 and forloop_remaining == 2 %}
+          <br class="clear" />
+        {% elsif section.settings.blog_posts_per_row == 3  and forloop_remaining == 3 %}
+          <br class="clear" />
+        {% elsif section.settings.blog_posts_per_row == 4  and forloop_remaining == 0 %}
+          <br class="clear" />
+        {% elsif  section.settings.blog_posts_per_row == 1  and forloop_remaining == 1 %}
+          <br class="clear" />
+        {% endif %}
+        {% endcomment %}
+      {% endfor %}
+              {% if block.settings.general_link and block.settings.general_link_title %}
+                <div class="one-whole column text-center" style="margin-bottom: 50px;">
+                  <a href="{{ block.settings.general_link }}" class="action_button">{{ block.settings.general_link_title }}</a>
+                </div>
+              {% endif %}
+    </div>
+
+  {% endfor %}
+
+  
+
+</div>
+
+{% schema %}
+
+{
+  "name": "Advice",
+  "class": "blog-section",
+  "settings": [
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Banner image",
+        "info": "1800 x 800px recommended"
+      },
+      {
+        "type": "checkbox",
+        "id": "image_darken",
+        "label": "Darken banner image",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "blog_posts_per_row",
+        "label": "Advice articles per row",
+        "min": 1,
+        "max": 4,
+        "step": 1,
+        "default": 3
+      },
+      {
+        "type": "checkbox",
+        "id": "read_time",
+        "label": "Show estimated read time",
+        "default": true
+      },
+      {
+       "type": "checkbox",
+       "id": "read_more_link",
+       "label": "Show continue reading link for advice excerpts",
+       "default": true
+      }
+  ],
+  "blocks": [
+    {
+      "type": "post_tags",
+      "name": "Advice sections",
+      "settings": [
+        {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Banner image",
+            "info": "1200 x 300px recommended"
+        },
+      	{
+            "type": "url",
+            "id": "image_link",
+            "label": "Banner image link"
+        },
+        {
+            "type": "checkbox",
+            "id": "image_darken",
+            "label": "Darken banner image",
+            "default": false
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subheading",
+          "default": "Subheading"
+        },
+        {
+            "type": "textarea",
+            "id": "handles",
+            "label": "Page handles",
+            "info": "One per line"
+        },
+      	{
+            "type": "text",
+            "id": "general_link_title",
+            "label": "Section link title"
+        },
+      	{
+            "type": "url",
+            "id": "general_link",
+            "label": "Section link url"
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

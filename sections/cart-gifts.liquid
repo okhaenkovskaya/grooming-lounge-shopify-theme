@@ -1,0 +1,44 @@
+<script>
+    {% if section.blocks.size > 0  %}
+      window.freeGiftOptions = [];
+      {% for block in section.blocks %}
+      window.freeGiftOptions.push({tag: "{{ block.settings.tag }}", minimum: {{ block.settings.minimum }}, variant_id: '{{ all_products[ block.settings.product ].variants.first.id }}' });
+      {% endfor %}
+    {% endif %}
+</script>
+{% schema %}
+{
+  "name": "Cart Gifts",
+  "blocks": [
+    {
+      "type": "gift",
+      "name": "Gift Option",
+      "settings": [
+          {
+             "id": "title",
+             "type": "text",
+             "label": "title",
+             "info": "This is a descriptive text for the gift"
+          },
+          {
+            "id": "tag",
+            "type": "text",
+            "label": "Tag",
+            "info": "This is the tag that will identify the set of products to generate gifts"
+          },
+          {
+            "id": "minimum",
+            "type": "number",
+            "label": "Minimum Purchase"
+          },
+          {
+            "id": "product",
+            "type": "product",
+            "label": "Gift Product",
+            "info": "The Product to give away for free"
+          }
+      ]
+    }
+  ]
+}
+{% endschema %}

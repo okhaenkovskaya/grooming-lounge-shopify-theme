@@ -1,0 +1,89 @@
+<div class="
+  {% if products_per_row == 2 %}
+    eight columns
+  {% elsif products_per_row == 3 %}
+    one-third column
+  {% elsif products_per_row == 4 %}
+    four columns
+  {% elsif products_per_row == 5 %}
+    one-fifth column
+  {% elsif products_per_row == 6 %}
+    one-sixth column
+  {% else %}
+    one-seventh column
+  {% endif %}
+  {% if settings.mobile_products_per_row == '1' %}
+    medium-down--one-half
+    small-down--one-whole
+  {% else %}
+    medium-down--one-half
+    small-down--one-half
+  {% endif %}
+  thumbnail
+  {% cycle collection_group_mobile: 'even', 'odd' %}
+  quick-shop-style--{{ settings.quick_shop_style }}
+  product-{{ product.id }} highlight-hover">
+
+  {% assign collection_handles = product.collections | map: 'handle' %}
+  {% if product.featured_image.alt contains 'youtube' or image.alt contains 'vimeo' %}
+    {% assign alt_text = product.title %}
+  {% else %}
+    {% assign alt_text = product.featured_image.alt %}
+  {% endif %}
+
+  <div class="product-wrap">
+    <div class="relative product_image swap-{{ settings.collection_secondary_image }}">
+      {% assign product_url = product.url %}
+      {%- if product.metafields.collection.url != blank -%}
+        {% assign product_url = product.metafields.collection.url %}
+      {%- endif -%}
+      <a href="{{ product_url }}">
+        <div class="image__container">
+          {% include 'image-element', image: product.featured_image, alt: alt_text, object_fit: settings.align_height, max_height: section.settings.collection_height %}
+        </div>
+          {% if settings.collection_secondary_image != blank %}
+            <div class="image__container">
+              <img data-src="{% if product.images[1] != blank %}{{ product.images[1] | img_url: '800x' }}{% else %}{{ product.featured_image | img_url: '800x' }}{% endif %}"
+              class="secondary lazyload"
+              alt="{{ alt_text | escape }}"
+              />
+            </div>
+          {% endif %}
+        </a>
+      {% include "product-details" %}
+      {% if settings.quick_shop_style == 'inline' %}
+        {% include 'collection-swatch' %}
+      {% endif %}
+    </div>
+    <a class="product-info__caption {% if settings.thumbnail_hover_enabled %}hidden{% endif %}" href="{{ product_url }}">
+      {% include "product-info" %}
+    </a>
+  </div>
+
+  {% if settings.quick_shop_style == 'popup' and settings.quick_shop_enabled %}
+    {% include 'collection-swatch' %}
+  {% endif %}
+
+  {% if settings.quick_shop_style == 'inline' and settings.quick_shop_enabled and product.available and collection.handle != 'deals' %}
+    {% unless collection_handles contains 'coming-soon' %}
+      <div class="inline-quickshop js-product_section product-{{ product.id }}">
+        {%- if product.variants.size > 1 -%}
+          <div class="action__buttons__container">
+            {%- unless product.tags contains 'build-a-kit' or product.available == false -%}
+              {% include 'quick-shop-button' %}
+            {%- endunless -%}
+            <a href="{{ product.url }}" class="action_button choose_options action_button--secondary">Choose Options</a>
+          </div>
+        {%- else -%}
+          <div class="action__buttons__container">
+            <a href="{{ product.url }}" class="action_button choose_options action_button--secondary">See Details</a>
+            {%- unless product.tags contains 'build-a-kit' or product.available == false -%}
+              {% include 'product-form', show_payment_button_quickshop: settings.show_payment_button %}
+            {%- endunless -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {% endunless %}
+  {% endif %}
+
+</div>
