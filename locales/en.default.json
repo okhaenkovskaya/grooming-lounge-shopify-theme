@@ -167,6 +167,8 @@
       "tags": "Category",
       "size_chart": "Size Guide",
       "savings": "You Save",
+      "ships_free": "This item Ships Free",
+      "ships_free_over": "Free shipping callout over",
       "products_tagged": "Products tagged {{ tag }}",
       "items_left_count": {
         "one": "item left",

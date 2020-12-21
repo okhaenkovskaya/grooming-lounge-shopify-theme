@@ -11,6 +11,7 @@
     <meta name="MobileOptimized" content="320">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="{{ settings.shop_bg_color }}">
+    <link rel="preload" href="{{ 'styles.scss.css' | asset_url }}" as="style">
     <script src="{{ 'jquery.min.js' | asset_url }}"></script>
 
 
@@ -35,6 +36,7 @@
     {% if settings.enable_shopify_review_comments %}
       <link rel="preconnect dns-prefetch" href="https://productreviews.shopifycdn.com" />
     {% endif %}
+
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.6/jquery.fancybox.css">
     <!-- Stylesheets for Turbo 4.2.1 -->

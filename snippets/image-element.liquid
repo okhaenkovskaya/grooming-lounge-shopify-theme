@@ -91,7 +91,7 @@ max_height: <number>
         {% if low_quality_image %}
           src="{{ low_quality_image }}"
         {% endif %}
-        data-src="{{ image | img_url: '1600x' }}"
+        data-src="{{ image | img_url: '100x' }}"
         data-sizes="auto"
         data-aspectratio="{{ image.width }}/{{ image.height }}"
         data-srcset="{{ srcset }}"
