@@ -43,7 +43,7 @@
         </div>
           {% if settings.collection_secondary_image != blank %}
             <div class="image__container">
-              <img data-src="{% if product.images[1] != blank %}{{ product.images[1] | img_url: '800x' }}{% else %}{{ product.featured_image | img_url: '800x' }}{% endif %}"
+              <img data-src="{% if product.images[1] != blank %}{{ product.images[1] | img_url: '500x' }}{% else %}{{ product.featured_image | img_url: '500x' }}{% endif %}"
               class="secondary lazyload"
               alt="{{ alt_text | escape }}"
               />

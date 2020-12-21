@@ -58,7 +58,7 @@
                     {% assign secondary_image = product.featured_image %}
                   {% endif %}
                   <span class="image__container">
-                    <img  data-src="{{ secondary_image | img_url: '500x' }}"
+                    <img  data-src="{{ secondary_image | img_url: '400x' }}"
                           src="{{ secondary_image | img_url: '100x' }}"
                           class="secondary lazyload"
                           alt="{{ product.title | escape }}"

@@ -89,7 +89,7 @@
             {% if image_width == 'full' %}
               <div class="image__container" style="max-width: {{original_image_width}}">
                 {% if product.images.size > 0 %}
-                <img  data-src="{{ image_1200x }}"
+                <img  data-src="{{ image_800x }}"
                       alt="{{ image_alt | escape }}"
                       class=" lazyload {{ settings.image_loading_style }}"
                       data-index="{{ forloop.index0 }}"

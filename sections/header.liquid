@@ -79,7 +79,7 @@
       {% endif %}
       {% if section.settings.show_cart %}
         <div class="cart_container">
-          <a href="/cart" class="{% if section.settings.cart_icon == "cart" %}icon-cart{% else %}icon-bag{% endif %} mini_cart dropdown_link" title="{{ 'layout.general.cart' | t | escape }}" data-no-instant> <span class="cart_count">{{ cart.item_count }}</span></a>
+          <a href="#" class="{% if section.settings.cart_icon == "cart" %}icon-cart{% else %}icon-bag{% endif %} mini_cart dropdown_link" title="{{ 'layout.general.cart' | t | escape }}" data-no-instant> <span class="cart_count">{{ cart.item_count }}</span></a>
         </div>
       {% endif %}
     </div>
@@ -131,7 +131,7 @@
           {% else %}
           {% endif %}
         {% endif %}
-        
+
         {% if settings.show_multiple_currencies %}
           <li>
             {% include 'currencies-switcher' %}
@@ -197,7 +197,7 @@
       </ul>
       {% if section.settings.show_cart %}
         <div class="cart_container">
-          <a href="/cart" class="{% if section.settings.cart_icon == "cart" %}icon-cart{% else %}icon-bag{% endif %} mini_cart dropdown_link" data-no-instant>
+          <a href="#" class="{% if section.settings.cart_icon == "cart" %}icon-cart{% else %}icon-bag{% endif %} mini_cart dropdown_link" data-no-instant>
             <span class="cart_count">{{ cart.item_count }}</span>
           </a>
           {% unless settings.cart_action == 'ajax' and template contains 'cart' %}
@@ -265,7 +265,7 @@
                               {% for p in item.properties %}
                                 {% assign start = p.first | truncate: 1, '' %}
                                 {% if start == '_' or start == 'shipping_interval_unit_type' or start == 'subscription_id' or start == 'shipping_interval_frequency' %}{% continue %}{% endif %}
-                                
+
                                 {% if p.last != blank and p.first != "subscription_id" and p.first != "shipping_interval_frequency" and p.first != "shipping_interval_unit_type" %}
                                   <div class="line-item">
                                     {{ p.first }}: {{ p.last }}
