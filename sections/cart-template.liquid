@@ -193,10 +193,10 @@
             {% assign free_shipping_value = settings.grooming_free_shipping_minimum | times: 100 %}
             {% assign remainder = free_shipping_value | minus: cart.total_price %}
             {%- if remainder < 0 -%}
-            <p class="cart_subtotal_message"><strong>{{ 'cart.general.free_shipping' | t }}</strong></p>
-              {%- else -%}
+              <p class="cart_subtotal_message"><strong>{{ 'cart.general.free_shipping' | t }}</strong></p>
+            {%- else -%}
               {% assign rep = remainder | money_without_trailing_zeros %}
-            <p class="cart_subtotal_message"><strong>{{ 'cart.general.free_shipping_remainder' | t | replace: '$x', rep }}</strong></p>
+              <p class="cart_subtotal_message"><strong>{{ 'cart.general.free_shipping_remainder' | t | replace: '$x', rep }}</strong></p>
             {%- endif -%}
 
 
